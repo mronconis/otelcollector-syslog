@@ -1,0 +1,30 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: otelcollector-syslog
+  namespace: openshift-opentelemetry-operator
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: otelcollector-syslog-build
+  labels:
+    app: otelcollector-syslog
+spec:
+  resources:
+    limits:
+      memory: "4Gi"
+      cpu: "4"
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'otelcollector-syslog:0.140.0'
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/mronconis/otelcollector-syslog.git'
+      ref: 'main'
